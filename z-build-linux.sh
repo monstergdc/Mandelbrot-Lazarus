@@ -1,0 +1,1 @@
+lazbuild -B fractal.lpi

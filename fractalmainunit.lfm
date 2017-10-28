@@ -1,0 +1,91 @@
+object Form1: TForm1
+  Left = 240
+  Height = 470
+  Top = 113
+  Width = 719
+  Caption = 'Mandelbrot fractal test (Z''=Z*Z+C)'
+  ClientHeight = 470
+  ClientWidth = 719
+  OnCreate = FormCreate
+  LCLVersion = '1.6.2.0'
+  object ScrollBox1: TScrollBox
+    Left = 0
+    Height = 420
+    Top = 50
+    Width = 719
+    HorzScrollBar.Page = 708
+    VertScrollBar.Page = 408
+    Align = alClient
+    ClientHeight = 416
+    ClientWidth = 715
+    TabOrder = 0
+    object Image1: TImage
+      Left = 8
+      Height = 400
+      Top = 8
+      Width = 700
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 50
+    Top = 0
+    Width = 719
+    Align = alTop
+    ClientHeight = 50
+    ClientWidth = 719
+    TabOrder = 1
+    object BitBtn1: TBitBtn
+      Left = 8
+      Height = 30
+      Top = 8
+      Width = 80
+      Action = AcRun
+      TabOrder = 0
+    end
+    object BitBtn2: TBitBtn
+      Left = 96
+      Height = 30
+      Top = 8
+      Width = 75
+      Action = AcSave
+      TabOrder = 1
+    end
+    object Label1: TLabel
+      Left = 224
+      Height = 13
+      Top = 13
+      Width = 68
+      Caption = 'Max iterations'
+      ParentColor = False
+    end
+    object SpinEditMaxIter: TSpinEdit
+      Left = 304
+      Height = 21
+      Top = 11
+      Width = 64
+      MaxValue = 10000
+      MinValue = 1
+      TabOrder = 2
+      Value = 200
+    end
+  end
+  object ActionList1: TActionList
+    left = 48
+    top = 80
+    object AcRun: TAction
+      Caption = 'Run'
+      OnExecute = AcRunExecute
+    end
+    object AcSave: TAction
+      Caption = 'Save image'
+      OnExecute = AcSaveExecute
+    end
+  end
+  object SaveDialog1: TSaveDialog
+    Filter = 'Bitmap|*.bmp'
+    Options = [ofOverwritePrompt, ofPathMustExist, ofEnableSizing, ofViewDetail]
+    left = 48
+    top = 136
+  end
+end
