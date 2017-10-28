@@ -17,7 +17,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <StringTable ProductVersion="1.0"/>
+      <StringTable CompanyName="Noniewicz.com" FileDescription="Mandelbrot fractal generator example" LegalCopyright="(c) 2017 Noniewicz.com" ProductName="Mandelbrot fractal generator example" ProductVersion="1.0"/>
     </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -44,6 +44,7 @@
         <Filename Value="fractalmainunit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="FractalMainUnit"/>
       </Unit1>
