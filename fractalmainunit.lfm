@@ -35,7 +35,7 @@ object Form1: TForm1
     ClientHeight = 74
     ClientWidth = 719
     TabOrder = 1
-    object BitBtn1: TBitBtn
+    object BitBtnRun: TBitBtn
       Left = 8
       Height = 30
       Top = 8
@@ -45,7 +45,7 @@ object Form1: TForm1
       ParentFont = False
       TabOrder = 0
     end
-    object BitBtn2: TBitBtn
+    object BitBtnSave: TBitBtn
       Left = 104
       Height = 30
       Top = 8
@@ -68,7 +68,7 @@ object Form1: TForm1
       Height = 21
       Top = 11
       Width = 64
-      MaxValue = 10000
+      MaxValue = 100000
       MinValue = 1
       TabOrder = 2
       Value = 200
@@ -86,7 +86,7 @@ object Form1: TForm1
       Height = 21
       Top = 8
       Width = 64
-      MaxValue = 20000
+      MaxValue = 200000
       MinValue = 8
       TabOrder = 3
       Value = 700
@@ -96,7 +96,7 @@ object Form1: TForm1
       Height = 21
       Top = 8
       Width = 64
-      MaxValue = 20000
+      MaxValue = 200000
       MinValue = 8
       TabOrder = 4
       Value = 400
@@ -125,7 +125,7 @@ object Form1: TForm1
       Increment = 0.1
       MaxValue = 1000
       MinValue = -1000
-      TabOrder = 5
+      TabOrder = 6
       Value = -2.5
     end
     object FloatSpinEditX1: TFloatSpinEdit
@@ -136,7 +136,7 @@ object Form1: TForm1
       Increment = 0.1
       MaxValue = 1000
       MinValue = -1000
-      TabOrder = 6
+      TabOrder = 7
       Value = 1
     end
     object FloatSpinEditY0: TFloatSpinEdit
@@ -147,7 +147,7 @@ object Form1: TForm1
       Increment = 0.1
       MaxValue = 1000
       MinValue = -1000
-      TabOrder = 7
+      TabOrder = 8
       Value = -1
     end
     object FloatSpinEditY1: TFloatSpinEdit
@@ -158,7 +158,7 @@ object Form1: TForm1
       Increment = 0.1
       MaxValue = 1000
       MinValue = -1000
-      TabOrder = 8
+      TabOrder = 9
       Value = 1
     end
     object cbNegative: TCheckBox
@@ -167,7 +167,7 @@ object Form1: TForm1
       Top = 44
       Width = 63
       Caption = 'Negative'
-      TabOrder = 9
+      TabOrder = 5
     end
   end
   object ActionList1: TActionList

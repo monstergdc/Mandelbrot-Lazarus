@@ -1,12 +1,15 @@
 unit FractalMainUnit;
 
-//Fractal test (z'=z^2+c),v1.0
+//Mandelbrot fractal example (z'=z^2+c), v1.0
 //(c)2017 Noniewicz.com, Jakub Noniewicz aka MoNsTeR/GDC
 //created: 20171028 1700-1820
-//updated: 20171028 1930-2110
+//updated: 20171028 1930-2120
+//updated: 20171028 2155-2220
 
 {todo:
-- why seems negative?
+- color mapping?
+- benchmark?
+- jpg/png save?
 }
 
 {$mode objfpc}{$H+}
@@ -26,8 +29,8 @@ type
     AcRun: TAction;
     AcSave: TAction;
     ActionList1: TActionList;
-    BitBtn1: TBitBtn;
-    BitBtn2: TBitBtn;
+    BitBtnRun: TBitBtn;
+    BitBtnSave: TBitBtn;
     cbNegative: TCheckBox;
     FloatSpinEditX0: TFloatSpinEdit;
     FloatSpinEditX1: TFloatSpinEdit;
@@ -114,8 +117,8 @@ begin
   self.Image1.Picture.Bitmap.Canvas.FillRect(0, 0, w, h);
 
   setlength(matrix, w*h);
-  xs0 := (x1-x0)/w;
-  ys0 := (y1-y0)/h;
+  xs0 := abs(x1-x0)/w;
+  ys0 := abs(y1-y0)/h;
 
   for y := 0 to h-1 do
   begin
@@ -124,8 +127,8 @@ begin
       pix := 0;
       z.re := 0;
       z.im := 0;
-      c.re := xs0*(x-w*0.5);
-      c.im := ys0*(y-h*0.5);
+      c.re := x0+xs0*x;
+      c.im := y0+ys0*y;
       i := 0;
       ii := 0;
       noesc := true;
@@ -133,7 +136,7 @@ begin
       begin
         try
           z := cx_add(cx_mult(z, z), c);
-          if cx_modul(z).re > 1e999 then
+          if cx_modul(z).re >= 2 then
             raise(Exception.Create(''));
         except
           ii := i;
@@ -141,7 +144,7 @@ begin
         end;
         inc(i);
       end;
-      if noesc then ii := 0;
+      if noesc then ii := maxiter;
       pv := 1.0 - single(ii) / single(maxiter);
       if cbNegative.Checked then
         pix := 255-round(pv*255)
