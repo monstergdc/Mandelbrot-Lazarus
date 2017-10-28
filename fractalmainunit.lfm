@@ -1,22 +1,22 @@
 object Form1: TForm1
   Left = 240
-  Height = 470
+  Height = 530
   Top = 113
   Width = 719
   Caption = 'Mandelbrot fractal test (Z''=Z*Z+C)'
-  ClientHeight = 470
+  ClientHeight = 530
   ClientWidth = 719
   OnCreate = FormCreate
   LCLVersion = '1.6.2.0'
   object ScrollBox1: TScrollBox
     Left = 0
-    Height = 420
-    Top = 50
+    Height = 456
+    Top = 74
     Width = 719
     HorzScrollBar.Page = 708
     VertScrollBar.Page = 408
     Align = alClient
-    ClientHeight = 416
+    ClientHeight = 452
     ClientWidth = 715
     TabOrder = 0
     object Image1: TImage
@@ -28,27 +28,31 @@ object Form1: TForm1
   end
   object Panel1: TPanel
     Left = 0
-    Height = 50
+    Height = 74
     Top = 0
     Width = 719
     Align = alTop
-    ClientHeight = 50
+    ClientHeight = 74
     ClientWidth = 719
     TabOrder = 1
     object BitBtn1: TBitBtn
       Left = 8
       Height = 30
       Top = 8
-      Width = 80
+      Width = 88
       Action = AcRun
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 0
     end
     object BitBtn2: TBitBtn
-      Left = 96
+      Left = 104
       Height = 30
       Top = 8
-      Width = 75
+      Width = 96
       Action = AcSave
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 1
     end
     object Label1: TLabel
@@ -68,6 +72,102 @@ object Form1: TForm1
       MinValue = 1
       TabOrder = 2
       Value = 200
+    end
+    object Label2: TLabel
+      Left = 384
+      Height = 13
+      Top = 13
+      Width = 105
+      Caption = 'Image: width x height'
+      ParentColor = False
+    end
+    object SpinEditW: TSpinEdit
+      Left = 496
+      Height = 21
+      Top = 8
+      Width = 64
+      MaxValue = 20000
+      MinValue = 8
+      TabOrder = 3
+      Value = 700
+    end
+    object SpinEditH: TSpinEdit
+      Left = 568
+      Height = 21
+      Top = 8
+      Width = 64
+      MaxValue = 20000
+      MinValue = 8
+      TabOrder = 4
+      Value = 400
+    end
+    object Label3: TLabel
+      Left = 232
+      Height = 13
+      Top = 40
+      Width = 37
+      Caption = 'X range'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      Left = 440
+      Height = 13
+      Top = 40
+      Width = 37
+      Caption = 'Y range'
+      ParentColor = False
+    end
+    object FloatSpinEditX0: TFloatSpinEdit
+      Left = 280
+      Height = 21
+      Top = 40
+      Width = 72
+      Increment = 0.1
+      MaxValue = 1000
+      MinValue = -1000
+      TabOrder = 5
+      Value = -2.5
+    end
+    object FloatSpinEditX1: TFloatSpinEdit
+      Left = 352
+      Height = 21
+      Top = 40
+      Width = 72
+      Increment = 0.1
+      MaxValue = 1000
+      MinValue = -1000
+      TabOrder = 6
+      Value = 1
+    end
+    object FloatSpinEditY0: TFloatSpinEdit
+      Left = 488
+      Height = 21
+      Top = 40
+      Width = 72
+      Increment = 0.1
+      MaxValue = 1000
+      MinValue = -1000
+      TabOrder = 7
+      Value = -1
+    end
+    object FloatSpinEditY1: TFloatSpinEdit
+      Left = 560
+      Height = 21
+      Top = 40
+      Width = 72
+      Increment = 0.1
+      MaxValue = 1000
+      MinValue = -1000
+      TabOrder = 8
+      Value = 1
+    end
+    object cbNegative: TCheckBox
+      Left = 128
+      Height = 17
+      Top = 44
+      Width = 63
+      Caption = 'Negative'
+      TabOrder = 9
     end
   end
   object ActionList1: TActionList

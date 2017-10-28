@@ -3,12 +3,10 @@ unit FractalMainUnit;
 //Fractal test (z'=z^2+c),v1.0
 //(c)2017 Noniewicz.com, Jakub Noniewicz aka MoNsTeR/GDC
 //created: 20171028 1700-1820
-//updated: 20171028 1930-2040
+//updated: 20171028 1930-2110
 
 {todo:
 - why seems negative?
-- center?
-- expose params / allow bigger image
 }
 
 {$mode objfpc}{$H+}
@@ -30,12 +28,22 @@ type
     ActionList1: TActionList;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
+    cbNegative: TCheckBox;
+    FloatSpinEditX0: TFloatSpinEdit;
+    FloatSpinEditX1: TFloatSpinEdit;
+    FloatSpinEditY0: TFloatSpinEdit;
+    FloatSpinEditY1: TFloatSpinEdit;
     Image1: TImage;
     Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
     Panel1: TPanel;
     SaveDialog1: TSaveDialog;
     ScrollBox1: TScrollBox;
     SpinEditMaxIter: TSpinEdit;
+    SpinEditW: TSpinEdit;
+    SpinEditH: TSpinEdit;
     procedure AcRunExecute(Sender: TObject);
     procedure AcSaveExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -56,11 +64,20 @@ implementation
 
 procedure TForm1.AcRunExecute(Sender: TObject);
 begin
-  run_frac(-2.5, 1.0, -1.0, 1.0, SpinEditMaxIter.Value, 700, 400);
+  screen.Cursor := crHourGlass;
+  AcRun.Enabled := false;
+  AcSave.Enabled := false;
+  run_frac(FloatSpinEditX0.Value, FloatSpinEditX1.Value, FloatSpinEditY0.Value, FloatSpinEditY1.Value, SpinEditMaxIter.Value, SpinEditW.Value, SpinEditH.Value);
+  AcSave.Enabled := true;
+  AcRun.Enabled := true;
+  screen.Cursor := crDefault;
 end;
 
 procedure TForm1.AcSaveExecute(Sender: TObject);
 begin
+  screen.Cursor := crHourGlass;
+  AcRun.Enabled := false;
+  AcSave.Enabled := false;
   if SaveDialog1.Execute then
   try
     Image1.Picture.Bitmap.SaveToFile(SaveDialog1.FileName);
@@ -68,6 +85,9 @@ begin
     on E: Exception do
       showmessage('Error saving image: '+E.Message);
   end;
+  AcSave.Enabled := true;
+  AcRun.Enabled := true;
+  screen.Cursor := crDefault;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -84,8 +104,14 @@ var i, x, y, pix: integer;
 begin
   if (h <= 0) or (w <= 0) or (maxiter <= 0) then exit;
 
+  self.Image1.Width := w;
+  self.Image1.Height := h;
   self.Image1.Picture.Bitmap.Width := w;
   self.Image1.Picture.Bitmap.Height := h;
+
+  self.Image1.Picture.Bitmap.Canvas.Brush.Color := clBlack;
+  self.Image1.Picture.Bitmap.Canvas.Brush.Style := bsSolid;
+  self.Image1.Picture.Bitmap.Canvas.FillRect(0, 0, w, h);
 
   setlength(matrix, w*h);
   xs0 := (x1-x0)/w;
@@ -98,7 +124,7 @@ begin
       pix := 0;
       z.re := 0;
       z.im := 0;
-      c.re := xs0*(x-w*0.7);
+      c.re := xs0*(x-w*0.5);
       c.im := ys0*(y-h*0.5);
       i := 0;
       ii := 0;
@@ -117,7 +143,10 @@ begin
       end;
       if noesc then ii := 0;
       pv := 1.0 - single(ii) / single(maxiter);
-      pix := round(pv*255);
+      if cbNegative.Checked then
+        pix := 255-round(pv*255)
+      else
+        pix := round(pv*255);
       matrix[x+y*w] := pix;
     end;
   end;
