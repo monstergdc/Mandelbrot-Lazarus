@@ -183,7 +183,7 @@ object Form1: TForm1
     end
   end
   object SaveDialog1: TSaveDialog
-    Filter = 'Bitmap|*.bmp'
+    Filter = 'Bitmap (*.bmp)|*.bmp|PNG (*.png)|*.png'
     Options = [ofOverwritePrompt, ofPathMustExist, ofEnableSizing, ofViewDetail]
     left = 48
     top = 136

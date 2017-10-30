@@ -5,11 +5,12 @@ unit FractalMainUnit;
 //created: 20171028 1700-1820
 //updated: 20171028 1930-2120
 //updated: 20171028 2155-2220
+//updated: 20171030 1730-1745
 
 {todo:
 - color mapping?
 - benchmark?
-- jpg/png save?
+- no-GUI version
 }
 
 {$mode objfpc}{$H+}
@@ -19,7 +20,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   Buttons, ActnList, StdCtrls, Spin,
-  easycomplex;
+  mandelbrot;
 
 type
 
@@ -77,13 +78,18 @@ begin
 end;
 
 procedure TForm1.AcSaveExecute(Sender: TObject);
+var ext: string;
 begin
   screen.Cursor := crHourGlass;
   AcRun.Enabled := false;
   AcSave.Enabled := false;
   if SaveDialog1.Execute then
   try
-    Image1.Picture.Bitmap.SaveToFile(SaveDialog1.FileName);
+    ext := uppercase(ExtractFileExt(SaveDialog1.FileName));
+    if ext = '.PNG' then
+      Image1.Picture.PNG.SaveToFile(SaveDialog1.FileName);
+    if ext = '.BMP' then
+      Image1.Picture.Bitmap.SaveToFile(SaveDialog1.FileName);
   except
     on E: Exception do
       showmessage('Error saving image: '+E.Message);
@@ -96,75 +102,21 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   SaveDialog1.InitialDir := ExtractFilePath(Application.ExeName);
+  SaveDialog1.FileName := 'fractal.png';
+  SaveDialog1.FilterIndex := 2;
 end;
 
 procedure TForm1.run_frac(x0, x1, y0, y1: single; maxiter: integer; w, h: integer);
-var i, x, y, pix: integer;
-    ii, xs0, ys0, pv: single;
-    z, c: complex;
-    matrix: array of byte;
-    noesc: boolean;
 begin
   if (h <= 0) or (w <= 0) or (maxiter <= 0) then exit;
 
-  self.Image1.Width := w;
-  self.Image1.Height := h;
-  self.Image1.Picture.Bitmap.Width := w;
-  self.Image1.Picture.Bitmap.Height := h;
-
-  self.Image1.Picture.Bitmap.Canvas.Brush.Color := clBlack;
-  self.Image1.Picture.Bitmap.Canvas.Brush.Style := bsSolid;
-  self.Image1.Picture.Bitmap.Canvas.FillRect(0, 0, w, h);
-
-  setlength(matrix, w*h);
-  xs0 := abs(x1-x0)/w;
-  ys0 := abs(y1-y0)/h;
-
-  for y := 0 to h-1 do
-  begin
-    for x := 0 to w-1 do
-    begin
-      pix := 0;
-      z.re := 0;
-      z.im := 0;
-      c.re := x0+xs0*x;
-      c.im := y0+ys0*y;
-      i := 0;
-      ii := 0;
-      noesc := true;
-      while noesc and (i < maxiter) do
-      begin
-        try
-          z := cx_add(cx_mult(z, z), c);
-          if cx_modul(z).re >= 2 then
-            raise(Exception.Create(''));
-        except
-          ii := i;
-          noesc := false;
-        end;
-        inc(i);
-      end;
-      if noesc then ii := maxiter;
-      pv := 1.0 - single(ii) / single(maxiter);
-      if cbNegative.Checked then
-        pix := 255-round(pv*255)
-      else
-        pix := round(pv*255);
-      matrix[x+y*w] := pix;
-    end;
-  end;
-
+  Image1.Width := w;
+  Image1.Height := h;
+  Image1.Picture.Bitmap.Width := w;
+  Image1.Picture.Bitmap.Height := h;
   self.Image1.Enabled := false;
-  for y := 0 to h-1 do
-    for x := 0 to w-1 do
-    begin
-      pix := matrix[x+y*w];
-      pix := (pix and 255) +
-             (pix and 255 shl 8) +
-             (pix and 255 shl 16);
-      self.Image1.Picture.Bitmap.Canvas.Pixels[x, y] := pix;
-    end;
-  self.Image1.Enabled := true;
+  generate_mandelbrot(x0, x1, y0, y1, maxiter, w, h, cbNegative.Checked, Image1.Picture.Bitmap.Canvas);
+  Image1.Enabled := true;
 end;
 
 end.
