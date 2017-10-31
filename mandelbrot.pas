@@ -16,25 +16,32 @@ interface
 uses
   Classes, SysUtils, Graphics, easycomplex;
 
-
-  procedure generate_mandelbrot(x0, x1, y0, y1: single; maxiter: integer; w, h: integer; negavite: boolean; Canvas: TCanvas);
+type
+  TMandelbrot = class
+  private
+    matrix: array of byte;
+  public
+    procedure reset_matrix;
+    procedure generate_mandelbrot(x0, x1, y0, y1: single; maxiter: integer; w, h: integer; negavite: boolean);
+    procedure rawdata_to_canvas(w, h: integer; Canvas: TCanvas);
+    procedure rawdata_to_file(w, h: integer; fileName: string; RGB: boolean);
+  end;
 
 implementation
 
 
-procedure generate_mandelbrot(x0, x1, y0, y1: single; maxiter: integer; w, h: integer; negavite: boolean; Canvas: TCanvas);
+procedure TMandelbrot.reset_matrix;
+begin
+  setlength(matrix, 0);
+end;
+
+procedure TMandelbrot.generate_mandelbrot(x0, x1, y0, y1: single; maxiter: integer; w, h: integer; negavite: boolean);
 var i, x, y, pix: integer;
     ii, xs0, ys0, pv: single;
     z, c: complex;
-    matrix: array of byte;
     noesc: boolean;
 begin
   if (h <= 0) or (w <= 0) or (maxiter <= 0) then exit;
-  if not assigned(Canvas) then exit;
-
-  Canvas.Brush.Color := clBlack;
-  Canvas.Brush.Style := bsSolid;
-  Canvas.FillRect(0, 0, w, h);
 
   setlength(matrix, w*h);
   xs0 := abs(x1-x0)/w;
@@ -72,16 +79,52 @@ begin
       matrix[x+y*w] := pix;
     end;
   end;
+end;
+
+procedure TMandelbrot.rawdata_to_canvas(w, h: integer; Canvas: TCanvas);
+var x, y: integer;
+    pix: byte;
+begin
+  if (h <= 0) or (w <= 0) then exit;
+  if length(matrix) <> h*w then exit;
+  if not assigned(Canvas) then exit;
+
+  Canvas.Brush.Color := clBlack;
+  Canvas.Brush.Style := bsSolid;
+  Canvas.FillRect(0, 0, w, h);
 
   for y := 0 to h-1 do
     for x := 0 to w-1 do
     begin
       pix := matrix[x+y*w];
-      pix := (pix and 255) +
-             (pix and 255 shl 8) +
-             (pix and 255 shl 16);
-      Canvas.Pixels[x, y] := pix;
+      Canvas.Pixels[x, y] :=
+        (pix and 255) +
+        (pix and 255 shl 8) +
+        (pix and 255 shl 16);
     end;
 end;
 
+procedure TMandelbrot.rawdata_to_file(w, h: integer; fileName: string; RGB: boolean);
+var x, y, pix: integer;
+    f: file of byte;
+begin
+  if (h <= 0) or (w <= 0) then exit;
+  if length(matrix) <> h*w then exit;
+
+  //note: no try except here, handled by caller
+  AssignFile(f, fileName);
+  rewrite(f);
+  for y := 0 to h-1 do
+    for x := 0 to w-1 do
+    begin
+      pix := matrix[x+y*w];
+      if RGB then
+        write(f, pix, pix, pix) //grayscale but RGB
+      else
+        write(f, pix); //single grayscale chanel
+    end;
+  CloseFile(f);
+end;
+
 end.
+

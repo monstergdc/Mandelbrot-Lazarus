@@ -6,6 +6,7 @@ unit FractalMainUnit;
 //updated: 20171028 1930-2120
 //updated: 20171028 2155-2220
 //updated: 20171030 1730-1745
+//updated: 20171031 0120-0150
 
 {todo:
 - color mapping?
@@ -51,7 +52,9 @@ type
     procedure AcRunExecute(Sender: TObject);
     procedure AcSaveExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
+    fractal: TMandelbrot;
   public
     procedure run_frac(x0, x1, y0, y1: single; maxiter: integer; w, h: integer);
   end;
@@ -86,13 +89,23 @@ begin
   if SaveDialog1.Execute then
   try
     ext := uppercase(ExtractFileExt(SaveDialog1.FileName));
+    screen.Cursor := crHourGlass;
     if ext = '.PNG' then
       Image1.Picture.PNG.SaveToFile(SaveDialog1.FileName);
     if ext = '.BMP' then
       Image1.Picture.Bitmap.SaveToFile(SaveDialog1.FileName);
+    if ext = '.RAW' then
+    begin
+      //note: change of w/h after render and before save will mess things up
+      fractal.rawdata_to_file(SpinEditW.Value, SpinEditH.Value, SaveDialog1.FileName, false);
+    end;
+    screen.Cursor := crDefault;
   except
     on E: Exception do
-      showmessage('Error saving image: '+E.Message);
+    begin
+      screen.Cursor := crDefault;
+      MessageDlg('Error saving image: ' + E.Message, mtError, [mbOK], 0);
+    end;
   end;
   AcSave.Enabled := true;
   AcRun.Enabled := true;
@@ -101,9 +114,15 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  fractal := TMandelbrot.Create;
   SaveDialog1.InitialDir := ExtractFilePath(Application.ExeName);
   SaveDialog1.FileName := 'fractal.png';
   SaveDialog1.FilterIndex := 2;
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  fractal.Free;
 end;
 
 procedure TForm1.run_frac(x0, x1, y0, y1: single; maxiter: integer; w, h: integer);
@@ -115,7 +134,8 @@ begin
   Image1.Picture.Bitmap.Width := w;
   Image1.Picture.Bitmap.Height := h;
   self.Image1.Enabled := false;
-  generate_mandelbrot(x0, x1, y0, y1, maxiter, w, h, cbNegative.Checked, Image1.Picture.Bitmap.Canvas);
+  fractal.generate_mandelbrot(x0, x1, y0, y1, maxiter, w, h, cbNegative.Checked);
+  fractal.rawdata_to_canvas(w, h, Image1.Picture.Bitmap.Canvas);
   Image1.Enabled := true;
 end;
 
