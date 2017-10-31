@@ -111,6 +111,8 @@ begin
   if (h <= 0) or (w <= 0) then exit;
   if length(matrix) <> h*w then exit;
 
+//todo: care not for w/h, export per byte, no calc, check RBG once
+
   //note: no try except here, handled by caller
   AssignFile(f, fileName);
   rewrite(f);
