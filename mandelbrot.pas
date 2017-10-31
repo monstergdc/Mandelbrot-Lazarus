@@ -3,6 +3,7 @@ unit mandelbrot;
 //Mandelbrot fractal example (z'=z^2+c), v1.0
 //(c)2017 Noniewicz.com, Jakub Noniewicz aka MoNsTeR/GDC
 //created: 20171028
+//updated: 20171031
 
 {todo:
 - ?
@@ -43,7 +44,6 @@ begin
   begin
     for x := 0 to w-1 do
     begin
-      pix := 0;
       z.re := 0;
       z.im := 0;
       c.re := x0+xs0*x;
